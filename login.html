@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Taplink</title>
+  <meta name="description" content="Sign in to your Taplink account." />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--clr-bg);
+      position: relative;
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 400px;
+      padding: var(--sp-xl);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--r-lg);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--sp-xl);
+    }
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: var(--sp-xs);
+    }
+    .auth-sub {
+      color: var(--clr-text-2);
+      font-size: var(--fs-sm);
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-md);
+    }
+    .auth-switch {
+      text-align: center;
+      margin-top: var(--sp-lg);
+      font-size: var(--fs-sm);
+      color: var(--clr-text-2);
+    }
+    .auth-switch a {
+      color: var(--clr-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .auth-switch a:hover {
+      text-decoration: underline;
+    }
+    .glow-blob {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: var(--clr-primary);
+      filter: blur(100px);
+      opacity: 0.15;
+      border-radius: 50%;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="noise-overlay"></div>
+<div class="glow-blob"></div>
+
+<div class="auth-container">
+  <div class="auth-header">
+    <a href="index.html" class="nav-logo" style="justify-content:center;margin-bottom:var(--sp-md)">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="url(#lg2)"/>
+          <path d="M14 6v16M6 14h16" stroke="#030d06" stroke-width="3" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="lg2" x1="0" y1="0" x2="28" y2="28">
+              <stop stop-color="#00ff88"/><stop offset="1" stop-color="#00cc66"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">Tap<span class="logo-accent">link</span></span>
+    </a>
+    <h1 class="auth-title" id="authTitle">Welcome Back</h1>
+    <p class="auth-sub" id="authSub">Sign in to manage your digital cards</p>
+  </div>
+
+  <form class="auth-form" id="authForm">
+    <div class="input-group">
+      <label class="input-label" for="email">Email</label>
+      <input type="email" id="email" class="input-field" placeholder="you@example.com" required>
+    </div>
+    <div class="input-group">
+      <label class="input-label" for="password">Password</label>
+      <input type="password" id="password" class="input-field" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width:100%;margin-top:var(--sp-sm)">
+      Sign In
+    </button>
+  </form>
+
+  <div class="auth-switch" id="authSwitch">
+    Don't have an account? <a href="#" id="toggleAuthMode">Sign Up</a>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/login.js"></script>
+</body>
+</html>

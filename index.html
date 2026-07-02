@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taplink — The Future of Digital Networking</title>
+  <meta name="description" content="Create stunning digital business cards with NFC, QR codes, and instant contact sharing. Taplink — Connect Smarter, Share Instantly." />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+</head>
+<body>
+<div class="noise-overlay"></div>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="url(#lg1)"/>
+          <path d="M14 6v16M6 14h16" stroke="#030d06" stroke-width="3" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="28" y2="28">
+              <stop stop-color="#00ff88"/>
+              <stop offset="1" stop-color="#00cc66"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">Tap<span class="logo-accent">link</span></span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#templates" class="nav-link">Templates</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+    </div>
+
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline btn-sm" id="signInBtn">Sign In</a>
+      <a href="builder.html" class="btn btn-primary btn-sm" id="getStartedBtn">Get Started</a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════ -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-gradient"></div>
+
+  <div class="container hero-container">
+    <div class="hero-content">
+      <div class="hero-badge section-badge reveal">
+        ✦ The Future of Networking
+      </div>
+
+      <h1 class="hero-title reveal reveal-delay-1">
+        Tap Into the<br/>
+        <span class="text-gradient-2">Digital Future</span><br/>
+        of Networking
+      </h1>
+
+      <p class="hero-sub reveal reveal-delay-2">
+        Create a stunning digital business card, share your professional identity,<br class="d-none-mobile"/>
+        and connect instantly via NFC, QR code, or a single link.
+      </p>
+
+      <div class="hero-actions reveal reveal-delay-3">
+        <a href="builder.html" class="btn btn-primary btn-xl hero-cta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Create Your Card Free
+        </a>
+        <a href="#how-it-works" class="btn btn-secondary btn-xl">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          See How It Works
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero visual / phone mockup -->
+    <div class="hero-visual reveal reveal-delay-2">
+      <div class="hero-phone animate-float">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="demo-card">
+              <div class="demo-cover" style="background: linear-gradient(135deg, #00ff88, #006644)"></div>
+              <div class="demo-avatar">
+                <span>JD</span>
+              </div>
+              <div class="demo-info">
+                <p class="demo-name">Jane Doe</p>
+                <p class="demo-title">Product Designer</p>
+                <p class="demo-company">@Apple Inc.</p>
+              </div>
+              <div class="demo-links">
+                <div class="demo-link-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.42 2 2 0 0 1 3.62 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.94a16 16 0 0 0 6.06 6.06l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.74 16.92z"/></svg>
+                  Call Now
+                </div>
+                <div class="demo-link-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Email Me
+                </div>
+              </div>
+              <div class="demo-socials">
+                <div class="demo-social-dot"></div>
+                <div class="demo-social-dot"></div>
+                <div class="demo-social-dot"></div>
+                <div class="demo-social-dot"></div>
+              </div>
+              <div class="demo-save-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Save Contact
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-glow"></div>
+      </div>
+      <!-- Orbit elements -->
+      <div class="orbit-ring">
+        <div class="orbit-dot" style="--d:0deg"><span class="o-icon">⚡</span></div>
+        <div class="orbit-dot" style="--d:120deg"><span class="o-icon">🔗</span></div>
+        <div class="orbit-dot" style="--d:240deg"><span class="o-icon">📱</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- scroll cue -->
+  <div class="scroll-cue">
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
+    </div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MARQUEE STRIP
+═══════════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Digital Business Cards</span><span class="mq-dot">◆</span>
+    <span>NFC Technology</span><span class="mq-dot">◆</span>
+    <span>QR Code Sharing</span><span class="mq-dot">◆</span>
+    <span>Save Contact (vCard)</span><span class="mq-dot">◆</span>
+    <span>Real-Time Preview</span><span class="mq-dot">◆</span>
+    <span>Drag-Drop Links</span><span class="mq-dot">◆</span>
+    <span>Custom Templates</span><span class="mq-dot">◆</span>
+    <span>Mobile Optimized</span><span class="mq-dot">◆</span>
+    <!-- repeat -->
+    <span>Digital Business Cards</span><span class="mq-dot">◆</span>
+    <span>NFC Technology</span><span class="mq-dot">◆</span>
+    <span>QR Code Sharing</span><span class="mq-dot">◆</span>
+    <span>Save Contact (vCard)</span><span class="mq-dot">◆</span>
+    <span>Real-Time Preview</span><span class="mq-dot">◆</span>
+    <span>Drag-Drop Links</span><span class="mq-dot">◆</span>
+    <span>Custom Templates</span><span class="mq-dot">◆</span>
+    <span>Mobile Optimized</span><span class="mq-dot">◆</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════════════ -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-badge reveal">How It Works</span>
+      <h2 class="section-title reveal reveal-delay-1">
+        Get Started in <span class="text-gradient">3 Simple Steps</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        From zero to a stunning digital business card in under 3 minutes
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <div class="step-icon-wrap">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h3 class="step-title">Create Your Profile</h3>
+        <p class="step-desc">Sign up and design your personalized digital business card. Add your photo, bio, contact info, and social links in minutes.</p>
+        <div class="step-tags">
+          <span class="badge badge-green">Profile</span>
+          <span class="badge badge-green">Bio</span>
+          <span class="badge badge-green">Links</span>
+        </div>
+      </div>
+
+      <div class="step-connector reveal reveal-delay-2">
+        <div class="connector-line"></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <div class="step-icon-wrap">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <h3 class="step-title">Customize & Design</h3>
+        <p class="step-desc">Choose from beautiful templates, pick your colors and fonts, and arrange your links with drag-and-drop. Get a real-time live preview.</p>
+        <div class="step-tags">
+          <span class="badge badge-green">Templates</span>
+          <span class="badge badge-green">QR Code</span>
+          <span class="badge badge-green">Themes</span>
+        </div>
+      </div>
+
+      <div class="step-connector reveal reveal-delay-3">
+        <div class="connector-line"></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <div class="step-icon-wrap">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </div>
+        <h3 class="step-title">Share Instantly</h3>
+        <p class="step-desc">Share your card via link, QR code, or NFC tap. Anyone can save your contact directly to their phone — no app needed.</p>
+        <div class="step-tags">
+          <span class="badge badge-green">Share</span>
+          <span class="badge badge-green">NFC</span>
+          <span class="badge badge-green">vCard</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center" style="margin-top: var(--sp-xl)">
+      <a href="builder.html" class="btn btn-primary btn-lg reveal">
+        Start Building Now →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FEATURES
+═══════════════════════════════════════════ -->
+<section class="section features-section" id="features">
+  <div class="features-bg-glow"></div>
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-badge reveal">Features</span>
+      <h2 class="section-title reveal reveal-delay-1">
+        Everything You Need to<br/><span class="text-gradient">Stand Out</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        A complete professional networking toolkit built for the digital age
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card feature-card--large glass-card reveal">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3 class="feature-title">Full vCard / Save Contact</h3>
+        <p class="feature-desc">One tap downloads a .vcf contact file. Works on iOS, Android, and desktop. Add to contacts instantly — no app required.</p>
+        <div class="feature-preview vcf-preview">
+          <div class="vcf-chip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            contact.vcf
+          </div>
+          <div class="vcf-detail">Works on all platforms</div>
+        </div>
+      </div>
+
+      <div class="feature-card glass-card reveal reveal-delay-1">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <h3 class="feature-title">QR Code Sharing</h3>
+        <p class="feature-desc">Auto-generated QR code for every card. Works offline. Share at events without saying a word.</p>
+      </div>
+
+      <div class="feature-card glass-card reveal reveal-delay-2">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3 class="feature-title">Drag-and-Drop Links</h3>
+        <p class="feature-desc">Reorder your links, social profiles, and contact buttons with intuitive drag-and-drop ordering.</p>
+      </div>
+
+      <div class="feature-card glass-card reveal reveal-delay-1">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+        </div>
+        <h3 class="feature-title">Real-Time Preview</h3>
+        <p class="feature-desc">See your card update live as you type. Switch templates and colors instantly without refreshing.</p>
+      </div>
+
+      <div class="feature-card glass-card reveal reveal-delay-2">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <h3 class="feature-title">Mobile-First Design</h3>
+        <p class="feature-desc">Profiles are optimized for smartphones. Perfect display on every screen — iOS, Android, and desktop.</p>
+      </div>
+
+      <div class="feature-card feature-card--large glass-card reveal">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <h3 class="feature-title">Fully Customizable</h3>
+        <p class="feature-desc">Choose from 6 stunning templates. Customize colors, fonts, cover images, and avatar to match your personal brand perfectly.</p>
+        <div class="feature-color-swatches">
+          <span style="background:#00ff88"></span>
+          <span style="background:#6366f1"></span>
+          <span style="background:#f97316"></span>
+          <span style="background:#ec4899"></span>
+          <span style="background:#0ea5e9"></span>
+          <span style="background:#eab308"></span>
+          <span style="background:#fff"></span>
+        </div>
+      </div>
+
+      <div class="feature-card glass-card reveal reveal-delay-1">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="feature-title">8 Social Platforms</h3>
+        <p class="feature-desc">Connect Facebook, Instagram, LinkedIn, TikTok, Telegram, X, YouTube, and WhatsApp in one place.</p>
+      </div>
+
+      <div class="feature-card glass-card reveal reveal-delay-2">
+        <div class="feature-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3 class="feature-title">Multiple Templates</h3>
+        <p class="feature-desc">Six professionally designed card templates. From minimal to bold — find the one that represents you best.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TEMPLATES SHOWCASE
+═══════════════════════════════════════════ -->
+<section class="section" id="templates">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-badge reveal">Templates</span>
+      <h2 class="section-title reveal reveal-delay-1">
+        6 Stunning <span class="text-gradient">Card Templates</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        Each template crafted with precision. One click to switch, real-time preview.
+      </p>
+    </div>
+
+    <div class="templates-showcase reveal">
+      <div class="template-cards-row" id="templateShowcase">
+        <div class="tpl-card tpl-neon active" data-tpl="0">
+          <div class="tpl-cover" style="background:linear-gradient(135deg,#00ff88,#004d2c)"></div>
+          <div class="tpl-avatar">JD</div>
+          <div class="tpl-info">
+            <p class="tpl-name">Neon Green</p>
+            <p class="tpl-role">Futuristic</p>
+          </div>
+          <div class="tpl-label">Neon</div>
+        </div>
+        <div class="tpl-card tpl-midnight" data-tpl="1">
+          <div class="tpl-cover" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+          <div class="tpl-avatar" style="border-color:#6366f1;color:#6366f1">JD</div>
+          <div class="tpl-info">
+            <p class="tpl-name">Midnight</p>
+            <p class="tpl-role">Elegant</p>
+          </div>
+          <div class="tpl-label">Midnight</div>
+        </div>
+        <div class="tpl-card tpl-aurora" data-tpl="2">
+          <div class="tpl-cover" style="background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899)"></div>
+          <div class="tpl-avatar" style="border-color:#a855f7;color:#a855f7">JD</div>
+          <div class="tpl-info">
+            <p class="tpl-name">Aurora</p>
+            <p class="tpl-role">Vibrant</p>
+          </div>
+          <div class="tpl-label">Aurora</div>
+        </div>
+        <div class="tpl-card tpl-frost" data-tpl="3">
+          <div class="tpl-cover" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)"></div>
+          <div class="tpl-avatar" style="border-color:#0ea5e9;color:#0ea5e9">JD</div>
+          <div class="tpl-info">
+            <p class="tpl-name">Frost</p>
+            <p class="tpl-role">Corporate</p>
+          </div>
+          <div class="tpl-label">Frost</div>
+        </div>
+        <div class="tpl-card tpl-ember" data-tpl="4">
+          <div class="tpl-cover" style="background:linear-gradient(135deg,#f97316,#dc2626)"></div>
+          <div class="tpl-avatar" style="border-color:#f97316;color:#f97316">JD</div>
+          <div class="tpl-info">
+            <p class="tpl-name">Ember</p>
+            <p class="tpl-role">Bold</p>
+          </div>
+          <div class="tpl-label">Ember</div>
+        </div>
+        <div class="tpl-card tpl-minimal" data-tpl="5">
+          <div class="tpl-cover" style="background:#1a1a1a"></div>
+          <div class="tpl-avatar" style="border-color:#888;color:#888">JD</div>
+          <div class="tpl-info">
+            <p class="tpl-name">Minimal</p>
+            <p class="tpl-role">Clean</p>
+          </div>
+          <div class="tpl-label">Minimal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center" style="margin-top:var(--sp-xl)">
+      <a href="builder.html" class="btn btn-primary btn-lg reveal">
+        Try All Templates Free →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════════════ -->
+<section class="section testimonials-section" id="testimonials">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-badge reveal">Testimonials</span>
+      <h2 class="section-title reveal reveal-delay-1">
+        Loved by <span class="text-gradient">Professionals</span>
+      </h2>
+      <p class="section-sub reveal reveal-delay-2">
+        See what our community says about their Taplink experience
+      </p>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card glass-card reveal reveal-delay-1">
+        <p class="testi-text">"Taplink is an absolute game-changer. I don't need to carry stacks of cards anymore, and the design interface is simply breathtaking."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00ff88,#006644)">DS</div>
+          <div>
+            <p class="testi-name">David Smith</p>
+            <p class="testi-role">Lead Designer · Creative Studio</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card glass-card reveal reveal-delay-2">
+        <p class="testi-text">"Switching to Taplink was the best decision for my consulting business. Clients are always wowed by the digital card and the instant vCard feature."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#6366f1,#4338ca)">MG</div>
+          <div>
+            <p class="testi-name">Maria Garcia</p>
+            <p class="testi-role">Senior Consultant · Nexus Group</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card glass-card reveal reveal-delay-3">
+        <p class="testi-text">"The NFC capability is magical. Every time I tap my phone on someone's device, their jaw drops. Taplink makes connecting so much easier."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#f97316,#dc2626)">AT</div>
+          <div>
+            <p class="testi-name">Alex Turner</p>
+            <p class="testi-role">Event Coordinator · Elite Events</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CTA BANNER
+═══════════════════════════════════════════ -->
+<section class="cta-section reveal">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <div class="cta-inner glass-card-2">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to <span class="text-gradient">Tap In?</span></h2>
+        <p class="cta-sub">Create your digital business card in minutes. Free forever.</p>
+        <div class="cta-actions">
+          <a href="builder.html" class="btn btn-primary btn-xl">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Create Your Card — Free
+          </a>
+          <p class="cta-fine">No credit card required · Instant setup · Cancel anytime</p>
+        </div>
+      </div>
+      <div class="cta-decoration">
+        <div class="cta-qr">
+          <div class="qr-grid">
+            <div></div><div style="background:var(--clr-primary)"></div><div></div>
+            <div style="background:var(--clr-primary)"></div><div></div><div style="background:var(--clr-primary)"></div>
+            <div></div><div style="background:var(--clr-primary)"></div><div></div>
+          </div>
+          <p>QR Preview</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="footer">
+
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="margin-bottom:var(--sp-md)">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="8" fill="url(#lg2)"/>
+            <path d="M14 6v16M6 14h16" stroke="#030d06" stroke-width="3" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="lg2" x1="0" y1="0" x2="28" y2="28">
+                <stop stop-color="#00ff88"/><stop offset="1" stop-color="#00cc66"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">Tap<span class="logo-accent">link</span></span>
+      </a>
+      <p class="footer-tagline">Connect Smarter. Share Instantly.</p>
+      <div class="footer-socials">
+        <a href="#" class="footer-social-icon" aria-label="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" class="footer-social-icon" aria-label="X">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="#" class="footer-social-icon" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-links-col">
+      <h4 class="footer-col-title">Product</h4>
+      <ul>
+        <li><a href="builder.html">Create Card</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#templates">Templates</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links-col">
+      <h4 class="footer-col-title">Account</h4>
+      <ul>
+        <li><a href="dashboard.html">Sign In</a></li>
+        <li><a href="builder.html">Get Started</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links-col">
+      <h4 class="footer-col-title">Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@taplink.io">hello@taplink.io</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <p>© 2026 Taplink. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/landing.js"></script>
+</body>
+</html>

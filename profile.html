@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">Digital Business Card — Taplink</title>
+  <meta name="description" id="pageDesc" content="View this digital business card on Taplink." />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+<div class="noise-overlay"></div>
+
+<!-- Profile page content rendered by JS -->
+<div id="profileRoot"></div>
+
+<!-- QR Code Modal -->
+<div class="qr-modal-overlay" id="qrModal">
+  <div class="qr-modal-box">
+    <h3>Scan to Connect</h3>
+    <p id="qrPersonName">Scan this QR code to open the digital card</p>
+    <div class="qr-box" id="qrBoxContainer"></div>
+    <div class="qr-modal-actions">
+      <button class="btn btn-primary flex-1" id="downloadQrBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <button class="btn btn-outline flex-1" id="closeQrBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/profile.js"></script>
+</body>
+</html>
