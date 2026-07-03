@@ -5,14 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title id="pageTitle">Digital Business Card — Taplink</title>
   <meta name="description" id="pageDesc" content="View this digital business card on Taplink." />
+
+  <!-- ✅ DNS preconnect — resolves domain before JS even runs -->
+  <link rel="preconnect" href="https://cubscjzhnwhmmqtpzmfu.supabase.co" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/profile.css" />
+
+  <!-- ✅ Inline skeleton styles — renders before any CSS/JS loads -->
+  <style>
+    .profile-skeleton {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 0;
+      background: var(--clr-bg, #030d06);
+    }
+    .skeleton-cover {
+      width: 100%;
+      max-width: 480px;
+      height: 160px;
+      background: linear-gradient(90deg, #0d3a1a 25%, #113f1e 50%, #0d3a1a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 0 0 24px 24px;
+    }
+    .skeleton-avatar {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #0d3a1a 25%, #113f1e 50%, #0d3a1a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      margin-top: -44px;
+      border: 3px solid #030d06;
+    }
+    .skeleton-line {
+      border-radius: 8px;
+      background: linear-gradient(90deg, #0d3a1a 25%, #113f1e 50%, #0d3a1a 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      margin: 10px auto 0;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
 </head>
 <body>
 <div class="noise-overlay"></div>
 
-<!-- Profile page content rendered by JS -->
-<div id="profileRoot"></div>
+<!-- ✅ Skeleton shown immediately while JS fetches the card data -->
+<div id="profileRoot">
+  <div class="profile-skeleton">
+    <div class="skeleton-cover"></div>
+    <div class="skeleton-avatar"></div>
+    <div class="skeleton-line" style="width:140px;height:18px;margin-top:16px"></div>
+    <div class="skeleton-line" style="width:100px;height:13px;margin-top:8px"></div>
+    <div class="skeleton-line" style="width:80px;height:13px;margin-top:6px"></div>
+    <div class="skeleton-line" style="width:240px;height:44px;margin-top:24px;border-radius:12px"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <div class="skeleton-line" style="width:72px;height:36px;margin:0;border-radius:10px"></div>
+      <div class="skeleton-line" style="width:72px;height:36px;margin:0;border-radius:10px"></div>
+    </div>
+  </div>
+</div>
 
 <!-- QR Code Modal -->
 <div class="qr-modal-overlay" id="qrModal">
@@ -30,8 +90,10 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- ✅ QR script deferred so it doesn't block card rendering -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module" src="js/main.js"></script>
 <script type="module" src="js/profile.js"></script>
 </body>
 </html>
+

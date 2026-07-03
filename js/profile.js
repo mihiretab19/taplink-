@@ -36,18 +36,21 @@ async function loadAndRenderProfile() {
   const card = await getCard(id);
   if (!card) { renderNotFound(root); return; }
 
+  // ✅ Set page meta
   document.getElementById('pageTitle').textContent = `${card.name || 'Digital Card'} — Taplink`;
   const descEl = document.getElementById('pageDesc');
   if (descEl) descEl.content = `${card.title || ''} ${card.company ? 'at ' + card.company : ''} — View digital business card on Taplink.`;
 
-  // Increment views (silently, ignore if RLS blocks anonymous)
+  // ✅ Render immediately — user sees the card right away
+  renderProfile(root, card);
+
+  // ✅ Fire view increment in background AFTER rendering — never blocks the UI
   try {
     card.views = (card.views || 0) + 1;
-    await saveCard(card);
+    saveCard(card); // intentionally NOT awaited
   } catch (e) {}
-
-  renderProfile(root, card);
 }
+
 
 function renderProfile(root, card) {
   const tpl = TEMPLATES[card.template || 0];
