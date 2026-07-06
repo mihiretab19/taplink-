@@ -17,6 +17,43 @@ async function renderCards(filter = '') {
   grid.innerHTML = '<p style="text-align:center;width:100%;color:var(--clr-text-2)">Loading cards...</p>';
   
   const allCards = await getCards();
+  
+  // Dynamically update UI links to respect the one-card limit
+  const topbarBtn = document.getElementById('topbarCreateBtn');
+  const sidebarBtn = document.getElementById('nav-builder');
+  if (allCards.length > 0) {
+    const editUrl = `builder.html?id=${allCards[0].id}`;
+    if (topbarBtn) {
+      topbarBtn.href = editUrl;
+      topbarBtn.innerHTML = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit Card
+      `;
+    }
+    if (sidebarBtn) {
+      sidebarBtn.href = editUrl;
+      sidebarBtn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit Card
+      `;
+    }
+  } else {
+    if (topbarBtn) {
+      topbarBtn.href = 'builder.html';
+      topbarBtn.innerHTML = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Card
+      `;
+    }
+    if (sidebarBtn) {
+      sidebarBtn.href = 'builder.html';
+      sidebarBtn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Card Builder
+      `;
+    }
+  }
+
   const cards = allCards.filter(c =>
     !filter || c.name?.toLowerCase().includes(filter.toLowerCase()) ||
     c.title?.toLowerCase().includes(filter.toLowerCase())

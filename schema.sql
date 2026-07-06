@@ -5,11 +5,16 @@
 -- 1. Create cards table
 CREATE TABLE IF NOT EXISTS public.cards (
     id TEXT PRIMARY KEY,
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
     card_data JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Enforce one card per account at DB level (belt-and-suspenders with frontend checks)
+ALTER TABLE public.cards DROP CONSTRAINT IF EXISTS cards_user_id_unique;
+ALTER TABLE public.cards ADD CONSTRAINT cards_user_id_unique UNIQUE (user_id);
+
 
 -- 2. Enable Row Level Security (RLS)
 ALTER TABLE public.cards ENABLE ROW LEVEL SECURITY;

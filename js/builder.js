@@ -3,7 +3,7 @@
 // Real-time preview, drag-drop, template selection, save
 // ============================================================
 
-import { getCard, saveCard, generateId, showToast, fileToBase64, getUser, escapeHtml, sanitizeUrl } from './main.js';
+import { getCard, getCards, saveCard, generateId, showToast, fileToBase64, getUser, escapeHtml, sanitizeUrl } from './main.js';
 
 // ── State ─────────────────────────────────────────────────
 let cardState = {
@@ -38,7 +38,9 @@ async function loadFromQuery() {
 
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
+
   if (id) {
+    // Edit mode — load the specific card
     const existing = await getCard(id);
     if (existing) {
       cardState = { ...cardState, ...existing };
@@ -47,9 +49,21 @@ async function loadFromQuery() {
       showToast('Card not found', 'error');
     }
   } else {
-    cardState.id = generateId();
+    // New card mode — enforce one card per account
+    const allCards = await getCards();
+    if (allCards.length > 0) {
+      // User already has a card — redirect them to edit it instead
+      showToast('You already have a card — editing it now', 'info');
+      history.replaceState(null, '', `builder.html?id=${allCards[0].id}`);
+      cardState = { ...cardState, ...allCards[0] };
+      populateFields();
+    } else {
+      // No card yet — allow creation
+      cardState.id = generateId();
+    }
   }
 }
+
 
 function populateFields() {
   const fields = ['name','title','company','bio','phone','email','website','location','about'];
