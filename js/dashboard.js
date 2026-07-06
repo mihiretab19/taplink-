@@ -277,6 +277,27 @@ async function populateUser() {
   document.getElementById('sidebarUserEmail').textContent = user.email || '';
   const av = document.getElementById('sidebarAvatar');
   if (av) av.textContent = (user.email || 'U')[0].toUpperCase();
+
+  // Show admin console link in sidebar for the admin user
+  if (user.email === 'mihiretabbedilu@gmail.com') {
+    const nav = document.querySelector('.sidebar-nav');
+    if (nav && !document.getElementById('nav-admin-link')) {
+      const adminLink = document.createElement('a');
+      adminLink.href = 'admin.html';
+      adminLink.className = 'sidebar-link';
+      adminLink.id = 'nav-admin-link';
+      adminLink.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+        Admin Console
+      `;
+      const builderLink = document.getElementById('nav-builder');
+      if (builderLink) {
+        builderLink.insertAdjacentElement('afterend', adminLink);
+      } else {
+        nav.appendChild(adminLink);
+      }
+    }
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────

@@ -108,3 +108,44 @@ CREATE POLICY "avatars_owner_delete"
         AND auth.uid()::text = (storage.foldername(name))[1]
     );
 */
+
+-- 7. Admin Dashboard SQL Functions
+-- Run this in your Supabase SQL Editor to enable admin reports securely.
+CREATE OR REPLACE FUNCTION public.get_admin_dashboard_data()
+RETURNS json
+SECURITY DEFINER
+AS $$
+DECLARE
+  caller_email text;
+  result json;
+BEGIN
+  -- Get user email from the JWT
+  caller_email := auth.jwt() ->> 'email';
+  
+  -- Strict email check (replace with your admin email if needed)
+  IF caller_email = 'mihiretabbedilu@gmail.com' THEN
+    result := json_build_object(
+      'total_users', (SELECT count(*) FROM auth.users),
+      'total_cards', (SELECT count(*) FROM public.cards),
+      'users_list', (
+         SELECT json_agg(u_data) FROM (
+           SELECT 
+             u.id,
+             u.email,
+             u.created_at,
+             c.id IS NOT NULL AS has_card,
+             c.id AS card_id,
+             c.card_data->>'name' AS card_name
+           FROM auth.users u
+           LEFT JOIN public.cards c ON u.id = c.user_id
+           ORDER BY u.created_at DESC
+         ) u_data
+      )
+    );
+    RETURN result;
+  ELSE
+    RAISE EXCEPTION 'Access denied. Only mihiretabbedilu@gmail.com can access the admin panel.';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
