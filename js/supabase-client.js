@@ -8,8 +8,14 @@ let createClientFn;
 if (window.supabase && typeof window.supabase.createClient === 'function') {
   createClientFn = window.supabase.createClient;
 } else {
-  const module = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/+esm');
-  createClientFn = module.createClient;
+  try {
+    const module = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/+esm');
+    createClientFn = module.createClient;
+  } catch (e) {
+    console.error('Failed to load Supabase library:', e);
+  }
 }
 
-export const supabase = createClientFn(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClientFn
+  ? createClientFn(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
