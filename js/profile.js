@@ -33,22 +33,57 @@ async function loadAndRenderProfile() {
 
   if (!id) { renderNotFound(root); return; }
 
+  // 1. Stale-While-Revalidate Caching for Instant Taps
+  const cacheKey = `card_cache_${id}`;
+  let cachedData = null;
+  try {
+    cachedData = localStorage.getItem(cacheKey);
+  } catch (e) {
+    console.warn('localStorage is disabled or unavailable:', e);
+  }
+  let hasRenderedCache = false;
+
+  if (cachedData) {
+    try {
+      const cachedCard = JSON.parse(cachedData);
+      renderProfile(root, cachedCard);
+      // Set page meta immediately from cache
+      document.getElementById('pageTitle').textContent = `${cachedCard.name || 'Digital Card'} — Taplink`;
+      const descEl = document.getElementById('pageDesc');
+      if (descEl) {
+        descEl.content = `${cachedCard.title || ''} ${cachedCard.company ? 'at ' + cachedCard.company : ''} — View digital business card on Taplink.`;
+      }
+      hasRenderedCache = true;
+    } catch (e) {
+      console.warn('Failed to parse cached card:', e);
+    }
+  }
+
+  // 2. Fetch fresh data from Supabase
   const card = await getCard(id);
-  if (!card) { renderNotFound(root); return; }
+  if (!card) {
+    if (!hasRenderedCache) {
+      renderNotFound(root);
+    }
+    return;
+  }
+
+  // Cache the fresh card data
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify(card));
+  } catch (e) {
+    console.warn('Failed to write to localStorage:', e);
+  }
+
+  // 3. Render fresh data (updates the UI with any changes)
+  renderProfile(root, card);
 
   // ✅ Set page meta
   document.getElementById('pageTitle').textContent = `${card.name || 'Digital Card'} — Taplink`;
   const descEl = document.getElementById('pageDesc');
   if (descEl) descEl.content = `${card.title || ''} ${card.company ? 'at ' + card.company : ''} — View digital business card on Taplink.`;
 
-  // ✅ Render immediately — user sees the card right away
-  renderProfile(root, card);
-
-  // ✅ Fire view increment in background AFTER rendering — never blocks the UI
-  try {
-    card.views = (card.views || 0) + 1;
-    saveCard(card); // intentionally NOT awaited
-  } catch (e) {}
+  // (View tracking via saveCard removed because it causes auth errors for anonymous visitors)
 }
 
 
@@ -219,10 +254,10 @@ function renderProfile(root, card) {
     } catch (e) {}
   });
 
-  document.getElementById('openQrHeaderBtn')?.addEventListener('click', () => openQR(card.id));
+  document.getElementById('openQrHeaderBtn')?.addEventListener('click', () => openQR(card));
   document.getElementById('copyLinkHeaderBtn')?.addEventListener('click', copyLink);
   document.getElementById('copyLinkBtn')?.addEventListener('click', copyLink);
-  document.getElementById('openQrBtn')?.addEventListener('click', () => openQR(card.id));
+  document.getElementById('openQrBtn')?.addEventListener('click', () => openQR(card));
 }
 
 // ── Social pills builder ───────────────────────────────────
@@ -261,8 +296,7 @@ function renderNotFound(root) {
 // ── QR Code ───────────────────────────────────────────────
 let qrInstance = null;
 
-async function openQR(id) {
-  const card = await getCard(id);
+function openQR(card) {
   if (!card) return;
 
   document.getElementById('qrPersonName').textContent = `${card.name || 'Card'}'s QR Code`;
@@ -286,7 +320,7 @@ async function openQR(id) {
 
   try {
     card.scans = (card.scans || 0) + 1;
-    await saveCard(card);
+    saveCard(card); // intentionally NOT awaited
   } catch (e) {}
 }
 

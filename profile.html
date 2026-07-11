@@ -11,6 +11,12 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 
+  <!-- ✅ Preload Critical Assets to run them in parallel immediately -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js" as="script" />
+  <link rel="modulepreload" href="js/profile.js" />
+  <link rel="modulepreload" href="js/main.js" />
+  <link rel="modulepreload" href="js/supabase-client.js" />
+
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/profile.css" />
 
@@ -90,9 +96,9 @@
   </div>
 </div>
 
-<!-- ✅ QR script deferred so it doesn't block card rendering -->
+<!-- ✅ QR and Supabase scripts deferred so they don't block layout/parsing -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script type="module" src="js/main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js"></script>
 <script type="module" src="js/profile.js"></script>
 </body>
 </html>
