@@ -105,6 +105,19 @@ export async function saveCard(card) {
 }
 window.saveCard = saveCard;
 
+export async function incrementStat(id, statName) {
+  try {
+    const { error } = await supabase.rpc('increment_card_stat', { 
+      card_id: id, 
+      stat_name: statName 
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error('Error incrementing stat:', err);
+  }
+}
+window.incrementStat = incrementStat;
+
 export async function deleteCard(id) {
   try {
     const { error } = await supabase

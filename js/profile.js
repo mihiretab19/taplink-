@@ -2,7 +2,7 @@
 // TAPLINK — PUBLIC PROFILE JS (Supabase Integrated)
 // Renders card, QR code, vCard download
 // ============================================================
-import { getCard, saveCard, downloadVCard, showToast, escapeHtml, sanitizeUrl } from './main.js';
+import { getCard, saveCard, downloadVCard, showToast, escapeHtml, sanitizeUrl, incrementStat } from './main.js';
 
 
 const TEMPLATES = [
@@ -83,7 +83,8 @@ async function loadAndRenderProfile() {
   const descEl = document.getElementById('pageDesc');
   if (descEl) descEl.content = `${card.title || ''} ${card.company ? 'at ' + card.company : ''} — View digital business card on Taplink.`;
 
-  // (View tracking via saveCard removed because it causes auth errors for anonymous visitors)
+  // Track view securely bypassing RLS
+  incrementStat(id, 'views');
 }
 
 
@@ -248,10 +249,7 @@ function renderProfile(root, card) {
   // Bind interactive elements
   document.getElementById('saveContactBtn')?.addEventListener('click', async () => {
     downloadVCard(card);
-    try {
-      card.saves = (card.saves || 0) + 1;
-      await saveCard(card);
-    } catch (e) {}
+    incrementStat(card.id, 'saves');
   });
 
   document.getElementById('openQrHeaderBtn')?.addEventListener('click', () => openQR(card));
@@ -318,10 +316,7 @@ function openQR(card) {
 
   document.getElementById('qrModal').classList.add('open');
 
-  try {
-    card.scans = (card.scans || 0) + 1;
-    saveCard(card); // intentionally NOT awaited
-  } catch (e) {}
+  incrementStat(card.id, 'scans');
 }
 
 function closeQR() {

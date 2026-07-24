@@ -149,4 +149,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- 8. Analytics Increment Function (Security Definer to bypass RLS for public visitors)
+CREATE OR REPLACE FUNCTION public.increment_card_stat(card_id text, stat_name text)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Validate stat_name to prevent arbitrary jsonb key injection
+  IF stat_name NOT IN ('views', 'scans', 'saves') THEN
+    RAISE EXCEPTION 'Invalid stat name';
+  END IF;
 
+  UPDATE public.cards
+  SET card_data = jsonb_set(
+        card_data, 
+        ARRAY[stat_name], 
+        to_jsonb(COALESCE((card_data->>stat_name)::int, 0) + 1)
+      )
+  WHERE id = card_id;
+END;
+$$;
