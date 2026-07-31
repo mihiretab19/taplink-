@@ -311,9 +311,16 @@ function renderCustomLinks() {
 
 document.getElementById('addLinkBtn')?.addEventListener('click', () => {
   const label = document.getElementById('newLinkLabel').value.trim();
-  const url   = document.getElementById('newLinkUrl').value.trim();
-  if (!label || !url) { showToast('Please enter both label and URL', 'error'); return; }
-  cardState.links.push({ id: generateId(), label, url });
+  const rawUrl = document.getElementById('newLinkUrl').value.trim();
+  if (!label || !rawUrl) { showToast('Please enter both label and URL', 'error'); return; }
+  
+  const safeUrl = sanitizeUrl(rawUrl);
+  if (safeUrl === '#') {
+    showToast('Invalid or malicious URL detected', 'error');
+    return;
+  }
+  
+  cardState.links.push({ id: generateId(), label, url: safeUrl });
   document.getElementById('newLinkLabel').value = '';
   document.getElementById('newLinkUrl').value = '';
   renderCustomLinks();
@@ -415,7 +422,7 @@ function buildSocialIcons(social, accent, btnText) {
     .filter(([,v]) => v)
     .map(([k, v]) => {
       const def = defs[k] || { label: k.slice(0,2), color: accent, bg: 'rgba(255,255,255,0.1)' };
-      const href = k === 'whatsapp' ? `https://wa.me/${v.replace(/\D/g,'')}` : v;
+      const href = k === 'whatsapp' ? `https://wa.me/${v.replace(/\D/g,'')}` : sanitizeUrl(v);
       return `<a href="${href}" class="pv-social-btn" style="background:${def.bg};border-color:${def.color}40;color:${def.color}" target="_blank" title="${k}">${def.label.toUpperCase()}</a>`;
     }).join('');
 }

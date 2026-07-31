@@ -267,6 +267,7 @@ function buildSocialPills(social, accent) {
       const meta = SOCIAL_META[key] || { label: key, icon: '', fill: 'none', color: accent };
       let href = value;
       if (key === 'whatsapp') href = `https://wa.me/${value.replace(/\D/g, '')}`;
+      else href = sanitizeUrl(value);
       return `
         <a href="${href}" class="social-link-pill" target="_blank" rel="noopener"
           style="background:${meta.color}15;border-color:${meta.color}40;color:${meta.color}">
