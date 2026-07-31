@@ -167,24 +167,34 @@ function updateAboutCount() {
 document.getElementById('avatarInput')?.addEventListener('change', async e => {
   const file = e.target.files?.[0];
   if (!file) return;
-  const b64 = await fileToBase64(file);
-  cardState.avatar = b64;
-  const circle = document.getElementById('avatarPreview');
-  circle.innerHTML = `<img src="${b64}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-  renderPreview();
-  showToast('Profile photo uploaded', 'success');
+  try {
+    const b64 = await fileToBase64(file);
+    cardState.avatar = b64;
+    const circle = document.getElementById('avatarPreview');
+    circle.innerHTML = `<img src="${b64}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    renderPreview();
+    showToast('Profile photo uploaded', 'success');
+  } catch (err) {
+    e.target.value = '';
+    showToast(err.message || 'Please select a valid image file', 'error');
+  }
 });
 
 // ── Cover upload ──────────────────────────────────────────
 document.getElementById('coverInput')?.addEventListener('change', async e => {
   const file = e.target.files?.[0];
   if (!file) return;
-  const b64 = await fileToBase64(file);
-  cardState.cover = b64;
-  const wrap = document.getElementById('coverPreviewWrap');
-  wrap.innerHTML = `<img src="${b64}" class="preview-img" alt="cover">`;
-  renderPreview();
-  showToast('Cover image uploaded', 'success');
+  try {
+    const b64 = await fileToBase64(file);
+    cardState.cover = b64;
+    const wrap = document.getElementById('coverPreviewWrap');
+    wrap.innerHTML = `<img src="${b64}" class="preview-img" alt="cover">`;
+    renderPreview();
+    showToast('Cover image uploaded', 'success');
+  } catch (err) {
+    e.target.value = '';
+    showToast(err.message || 'Please select a valid image file', 'error');
+  }
 });
 
 // ── Template grid ─────────────────────────────────────────
