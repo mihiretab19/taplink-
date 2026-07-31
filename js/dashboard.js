@@ -1,6 +1,7 @@
 // ============================================================
 // TAPLINK — DASHBOARD JS (Supabase Integrated)
 // ============================================================
+import { supabase } from './supabase-client.js';
 import { getCards, getCard, deleteCard, getUser, openModal, closeModal, showToast, signOut } from './main.js';
 
 let pendingDeleteId = null;
@@ -269,6 +270,9 @@ function checkMobile() {
 async function populateUser() {
   const user = await getUser();
   if (!user) {
+    // If user is null (e.g. deleted from dashboard but session remains in local storage)
+    // Clear the stale local session before redirecting
+    await supabase.auth.signOut();
     // Redirect to login if not logged in
     window.location.href = 'login.html';
     return;

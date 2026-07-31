@@ -10,10 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const sub = document.getElementById('authSub');
   const submitBtn = document.getElementById('authSubmitBtn');
 
-  // Check if already logged in
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
+  // Check if already logged in and user still exists
+  supabase.auth.getUser().then(async ({ data: { user }, error }) => {
+    if (user) {
       window.location.href = 'dashboard.html';
+    } else {
+      // Clear any stale session data from local storage
+      await supabase.auth.signOut();
     }
   });
 
@@ -27,12 +30,16 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.textContent = 'Sign Up';
       toggleBtn.innerHTML = 'Sign In';
       toggleBtn.previousSibling.textContent = 'Already have an account? ';
+      document.getElementById('email').setAttribute('pattern', '.*@gmail\\.com$');
+      document.getElementById('email').setAttribute('title', 'Only @gmail.com email addresses are allowed');
     } else {
       title.textContent = 'Welcome Back';
       sub.textContent = 'Sign in to manage your digital cards';
       submitBtn.textContent = 'Sign In';
       toggleBtn.innerHTML = 'Sign Up';
       toggleBtn.previousSibling.textContent = "Don't have an account? ";
+      document.getElementById('email').removeAttribute('pattern');
+      document.getElementById('email').removeAttribute('title');
     }
   });
 
@@ -43,6 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!email || !password) {
       showToast('Please enter email and password', 'error');
+      return;
+    }
+
+    if (isSignUp && !email.toLowerCase().endsWith('@gmail.com')) {
+      showToast('Only @gmail.com email addresses are allowed for sign up.', 'error');
       return;
     }
 

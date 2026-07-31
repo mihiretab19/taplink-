@@ -3,6 +3,7 @@
 // Real-time preview, drag-drop, template selection, save
 // ============================================================
 
+import { supabase } from './supabase-client.js';
 import { getCard, getCards, saveCard, generateId, showToast, fileToBase64, getUser, escapeHtml, sanitizeUrl } from './main.js';
 
 // ── State ─────────────────────────────────────────────────
@@ -32,6 +33,8 @@ const TEMPLATES = [
 async function loadFromQuery() {
   const user = await getUser();
   if (!user) {
+    // Clear stale session if user was deleted
+    await supabase.auth.signOut();
     window.location.href = 'login.html';
     return;
   }
