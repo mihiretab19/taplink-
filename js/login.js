@@ -2,16 +2,43 @@ import { supabase } from './supabase-client.js';
 import { showToast } from './main.js';
 
 let isSignUp = false;
+let disposableDomains = {};
 
-const DISPOSABLE_DOMAINS = [
+const FALLBACK_DISPOSABLE = [
   'mailinator.com', 'yopmail.com', 'tempmail.com', '10minutemail.com', 
   'trashmail.com', 'sharklasers.com', 'guerillamail.com', 'guerillamailblock.com', 
   'guerillamail.net', 'guerillamail.org', 'guerillamail.biz', 'grr.la', 
   'pokemail.net', 'dispostable.com', 'getairmail.com', 'generator.email', 
-  'throwawaymail.com', 'temp-mail.org', 'fakeinbox.com', 'maildrop.cc'
+  'throwawaymail.com', 'temp-mail.org', 'fakeinbox.com', 'maildrop.cc',
+  'amupx.com', 'davopa.com', 'bora4d.com', 'bejum.com', 'aghism.com', 'applamos.com'
 ];
 
+async function loadDisposableDomains() {
+  try {
+    const cached = localStorage.getItem('disposable_domains_cache');
+    const cachedTime = localStorage.getItem('disposable_domains_time');
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    if (cached && cachedTime && (Date.now() - Number(cachedTime) < oneDay)) {
+      disposableDomains = JSON.parse(cached);
+      return;
+    }
+
+    const res = await fetch('https://raw.githubusercontent.com/7c/fakefilter/main/json/data.json');
+    if (!res.ok) throw new Error('Failed to fetch');
+    const data = await res.json();
+    if (data && data.domains) {
+      disposableDomains = data.domains;
+      localStorage.setItem('disposable_domains_cache', JSON.stringify(data.domains));
+      localStorage.setItem('disposable_domains_time', Date.now().toString());
+    }
+  } catch (err) {
+    console.warn('Could not fetch updated disposable email list, using fallback:', err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  loadDisposableDomains();
   const form = document.getElementById('authForm');
   const toggleBtn = document.getElementById('toggleAuthMode');
   const title = document.getElementById('authTitle');
@@ -67,7 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Block temporary/disposable email addresses
       const domain = email.split('@')[1]?.toLowerCase() || '';
-      const isDisposable = DISPOSABLE_DOMAINS.some(d => domain === d || domain.endsWith('.' + d));
+      let isDisposable = false;
+      if (Object.keys(disposableDomains).length > 0) {
+        isDisposable = !!disposableDomains[domain];
+      } else {
+        isDisposable = FALLBACK_DISPOSABLE.some(d => domain === d || domain.endsWith('.' + d));
+      }
       if (isDisposable) {
         showToast('Temporary/disposable email addresses are not allowed.', 'error');
         return;
