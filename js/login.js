@@ -3,6 +3,14 @@ import { showToast } from './main.js';
 
 let isSignUp = false;
 
+const DISPOSABLE_DOMAINS = [
+  'mailinator.com', 'yopmail.com', 'tempmail.com', '10minutemail.com', 
+  'trashmail.com', 'sharklasers.com', 'guerillamail.com', 'guerillamailblock.com', 
+  'guerillamail.net', 'guerillamail.org', 'guerillamail.biz', 'grr.la', 
+  'pokemail.net', 'dispostable.com', 'getairmail.com', 'generator.email', 
+  'throwawaymail.com', 'temp-mail.org', 'fakeinbox.com', 'maildrop.cc'
+];
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('authForm');
   const toggleBtn = document.getElementById('toggleAuthMode');
@@ -30,16 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.textContent = 'Sign Up';
       toggleBtn.innerHTML = 'Sign In';
       toggleBtn.previousSibling.textContent = 'Already have an account? ';
-      document.getElementById('email').setAttribute('pattern', '.*@gmail\\.com$');
-      document.getElementById('email').setAttribute('title', 'Only @gmail.com email addresses are allowed');
     } else {
       title.textContent = 'Welcome Back';
       sub.textContent = 'Sign in to manage your digital cards';
       submitBtn.textContent = 'Sign In';
       toggleBtn.innerHTML = 'Sign Up';
       toggleBtn.previousSibling.textContent = "Don't have an account? ";
-      document.getElementById('email').removeAttribute('pattern');
-      document.getElementById('email').removeAttribute('title');
     }
   });
 
@@ -53,9 +57,21 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (isSignUp && !email.toLowerCase().endsWith('@gmail.com')) {
-      showToast('Only @gmail.com email addresses are allowed for sign up.', 'error');
-      return;
+    if (isSignUp) {
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showToast('Please enter a valid email address', 'error');
+        return;
+      }
+
+      // Block temporary/disposable email addresses
+      const domain = email.split('@')[1]?.toLowerCase() || '';
+      const isDisposable = DISPOSABLE_DOMAINS.some(d => domain === d || domain.endsWith('.' + d));
+      if (isDisposable) {
+        showToast('Temporary/disposable email addresses are not allowed.', 'error');
+        return;
+      }
     }
 
     submitBtn.disabled = true;
