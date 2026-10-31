@@ -6,6 +6,7 @@
   <title>Sign In — Taplink</title>
   <meta name="description" content="Sign in to your Taplink account." />
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/app.css" />
   <style>
     body {
       display: flex;
@@ -102,7 +103,7 @@
     </div>
     <div class="input-group">
       <label class="input-label" for="password">Password</label>
-      <input type="password" id="password" class="input-field" placeholder="••••••••" required>
+      <input type="password" id="password" class="input-field" placeholder="••••••••" minlength="6" required>
     </div>
     <button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width:100%;margin-top:var(--sp-sm)">
       Sign In

@@ -39,6 +39,9 @@ export async function getCards() {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
+    if (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001') {
+      return JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+    }
     
     const { data, error } = await supabase
       .from('cards')

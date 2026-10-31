@@ -356,7 +356,7 @@ function renderPreview() {
   screen.innerHTML = `
     <div class="profile-preview-inner" style="font-family:'${font}',sans-serif">
       <div class="pv-cover" style="${coverStyle};position:relative">
-        <div class="pv-avatar" style="border-color:var(--clr-bg)">
+        <div class="pv-avatar" style="border-color:var(--clr-bg-2)">
           ${avatarContent}
         </div>
       </div>
@@ -423,7 +423,10 @@ function buildSocialIcons(social, accent, btnText) {
     .map(([k, v]) => {
       const def = defs[k] || { label: k.slice(0,2), color: accent, bg: 'rgba(255,255,255,0.1)' };
       const href = k === 'whatsapp' ? `https://wa.me/${v.replace(/\D/g,'')}` : sanitizeUrl(v);
-      return `<a href="${href}" class="pv-social-btn" style="background:${def.bg};border-color:${def.color}40;color:${def.color}" target="_blank" title="${k}">${def.label.toUpperCase()}</a>`;
+      const label = k === 'tiktok'
+        ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.69 4.17 1.12 1.11 2.55 1.62 4.17 1.71v3.38c-1.34-.03-2.65-.33-3.84-.92-.53-.26-1.03-.58-1.48-.96-.01 2.91.01 5.82-.02 8.73-.1 2.04-1.07 4.03-2.66 5.3-1.58 1.28-3.72 1.73-5.69 1.18-1.99-.53-3.69-2.02-4.43-3.96-.75-1.93-.51-4.22.65-5.95 1.16-1.75 3.18-2.88 5.25-2.93.44-.02.88 0 1.31.08-.01 1.02-.01 2.04-.02 3.06-.53-.15-1.09-.19-1.64-.07-1.46.31-2.62 1.55-2.81 3.03-.22 1.53.57 3.13 1.92 3.83 1.29.69 2.98.46 4.05-.55.68-.62 1.05-1.52 1.05-2.43V.02z"/></svg>'
+        : def.label.toUpperCase();
+      return `<a href="${href}" class="pv-social-btn" style="background:${def.bg};border-color:${def.color}40;color:${def.color}" target="_blank" title="${k}">${label}</a>`;
     }).join('');
 }
 

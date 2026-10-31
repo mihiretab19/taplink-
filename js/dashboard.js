@@ -277,7 +277,9 @@ async function populateUser() {
     window.location.href = 'login.html';
     return;
   }
-  document.getElementById('sidebarUserName').textContent = user.user_metadata?.full_name || 'User';
+  document.getElementById('sidebarUserName').textContent = user.email === 'mihiretabbedilu@gmail.com'
+    ? 'Mihretab Bedilu'
+    : (user.user_metadata?.full_name || 'User');
   document.getElementById('sidebarUserEmail').textContent = user.email || '';
   const av = document.getElementById('sidebarAvatar');
   if (av) av.textContent = (user.email || 'U')[0].toUpperCase();
