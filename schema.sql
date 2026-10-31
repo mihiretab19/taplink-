@@ -149,7 +149,32 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 8. Analytics Increment Function (Security Definer to bypass RLS for public visitors)
+-- 8. Secure Admin User Deletion Function
+-- run this in Supabase SQL Editor. The caller email check prevents
+-- users other than the configured administrator from deleting accounts.
+CREATE OR REPLACE FUNCTION public.delete_user_account(target_user_id uuid)
+RETURNS void
+SECURITY DEFINER
+SET search_path = public, auth
+AS $$
+BEGIN
+  IF (auth.jwt() ->> 'email') <> 'mihiretabbedilu@gmail.com' THEN
+    RAISE EXCEPTION 'Access denied.';
+  END IF;
+
+  IF target_user_id = auth.uid() THEN
+    RAISE EXCEPTION 'The administrator account cannot delete itself.';
+  END IF;
+
+  DELETE FROM public.cards WHERE user_id = target_user_id;
+  DELETE FROM auth.users WHERE id = target_user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+REVOKE ALL ON FUNCTION public.delete_user_account(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.delete_user_account(uuid) TO authenticated;
+
+-- 9. Analytics Increment Function (Security Definer to bypass RLS for public visitors)
 CREATE OR REPLACE FUNCTION public.increment_card_stat(card_id text, stat_name text)
 RETURNS void
 LANGUAGE plpgsql

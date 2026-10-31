@@ -81,9 +81,13 @@ function renderUsersTable(list) {
       ? `<span class="badge-card-status badge-card-active">Active</span>`
       : `<span class="badge-card-status badge-card-inactive">None</span>`;
 
-    const actionButton = item.has_card
+    const isAdmin = item.email === 'mihiretabbedilu@gmail.com';
+    const viewButton = item.has_card
       ? `<a href="profile.html?id=${item.card_id}" target="_blank" class="btn btn-outline btn-sm" style="padding:4px 8px; font-size:11px">View Card</a>`
-      : `<span style="color:var(--clr-text-3); font-size:11px">—</span>`;
+      : '';
+    const deleteButton = isAdmin
+      ? ''
+      : `<button type="button" class="btn btn-danger btn-sm delete-user-btn" data-user-id="${escapeHtml(item.id)}" data-user-email="${escapeHtml(item.email)}" style="padding:4px 8px; font-size:11px">Delete User</button>`;
 
     return `
       <tr>
@@ -91,7 +95,7 @@ function renderUsersTable(list) {
         <td style="font-family:monospace; font-size:12px; color:var(--clr-text-3)">${item.id}</td>
         <td>${joinedDate}</td>
         <td>${statusBadge}</td>
-        <td>${actionButton}</td>
+        <td class="flex-center gap-xs" style="flex-wrap:wrap">${viewButton}${deleteButton || (!viewButton ? '<span style="color:var(--clr-text-3); font-size:11px">—</span>' : '')}</td>
       </tr>
     `;
   }).join('');
@@ -102,6 +106,30 @@ document.getElementById('adminSearchInput')?.addEventListener('input', e => {
   const query = e.target.value.toLowerCase().trim();
   const filtered = usersList.filter(u => u.email?.toLowerCase().includes(query));
   renderUsersTable(filtered);
+});
+
+// ── Delete User ────────────────────────────────────────────
+document.getElementById('usersTableBody')?.addEventListener('click', async (event) => {
+  const button = event.target.closest('.delete-user-btn');
+  if (!button) return;
+
+  const userId = button.dataset.userId;
+  const userEmail = button.dataset.userEmail;
+  if (!confirm(`Delete ${userEmail}? This permanently removes their account and card.`)) return;
+
+  button.disabled = true;
+  button.textContent = 'Deleting...';
+  try {
+    const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
+    if (error) throw error;
+    showToast('User deleted successfully', 'success');
+    await loadAdminStats();
+  } catch (err) {
+    console.error('Failed to delete user:', err);
+    showToast(err.message || 'Failed to delete user', 'error');
+    button.disabled = false;
+    button.textContent = 'Delete User';
+  }
 });
 
 // ── Sign Out ───────────────────────────────────────────────
