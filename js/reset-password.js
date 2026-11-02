@@ -51,6 +51,8 @@ form.addEventListener('submit', async (event) => {
   button.disabled = true;
   button.textContent = 'Updating...';
   try {
+    const { error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError) throw refreshError;
     const { error } = await supabase.auth.updateUser({ password });
     if (error) throw error;
     await supabase.auth.signOut();

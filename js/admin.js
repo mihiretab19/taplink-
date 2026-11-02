@@ -186,10 +186,21 @@ document.getElementById('adminPasswordForm')?.addEventListener('submit', async (
   button.disabled = true;
   button.textContent = 'Updating...';
   try {
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!sessionData?.session) {
+      throw new Error('Your admin session has expired. Sign in again, then retry.');
+    }
+
+    const { error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError) throw refreshError;
+
     const { error } = await supabase.auth.updateUser({ password });
     if (error) throw error;
     event.currentTarget.reset();
-    showToast('Admin password updated successfully', 'success');
+    showToast('Admin password updated successfully. Please sign in again.', 'success');
+    await supabase.auth.signOut();
+    setTimeout(() => { window.location.replace('login.html'); }, 1200);
   } catch (err) {
     console.error('Admin password update failed:', err);
     showToast(err.message || 'Could not update password', 'error');
