@@ -447,7 +447,8 @@ document.getElementById('saveCardBtn')?.addEventListener('click', async () => {
   if (!cardState.createdAt) cardState.createdAt = cardState.updatedAt;
   
   try {
-    await saveCard(cardState);
+    const savedCard = await saveCard(cardState);
+    cardState.id = savedCard.id;
     showToast('Card saved!', 'success');
     if (!location.search.includes('id=')) {
       history.replaceState(null, '', `builder.html?id=${cardState.id}`);
@@ -471,8 +472,9 @@ document.getElementById('previewPublicBtn')?.addEventListener('click', async () 
   if (!cardState.createdAt) cardState.createdAt = cardState.updatedAt;
   
   try {
-    await saveCard(cardState);
-    window.open(`profile.html?id=${cardState.id}`, '_blank');
+    const savedCard = await saveCard(cardState);
+    cardState.id = savedCard.id;
+    window.open(`profile.html?id=${savedCard.id}`, '_blank');
   } catch(err) {
     showToast('Please save the card before previewing', 'error');
   }

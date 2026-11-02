@@ -95,7 +95,7 @@ export async function getCard(id) {
     // are stored in the browser, so allow the card owner to open its public URL.
     try {
       const cachedProfile = JSON.parse(localStorage.getItem(`card_cache_${id}`) || 'null');
-      if (cachedProfile?.id === id || cachedProfile) return cachedProfile;
+      if (cachedProfile?.id === id) return cachedProfile;
       for (let index = 0; index < localStorage.length; index++) {
         const key = localStorage.key(index);
         if (!key?.includes('taplink-cards') && !key?.startsWith('taplink-dashboard-cache-')) continue;
@@ -157,14 +157,28 @@ export async function saveCard(card) {
       card_data: card
     };
 
-    const { data, error } = await supabase
-      .from('cards')
-      .upsert(payload, { onConflict: 'user_id' })
-      .select()
-      .single();
+    let result;
+    if (existingRows?.length > 0) {
+      const { data, error } = await supabase
+        .from('cards')
+        .update(payload)
+        .eq('user_id', user.id)
+        .select()
+        .single();
+      result = { data, error };
+    } else {
+      const { data, error } = await supabase
+        .from('cards')
+        .insert(payload)
+        .select()
+        .single();
+      result = { data, error };
+    }
 
-    if (error) throw error;
-    return { ...data.card_data, id: data.id };
+    if (result.error) throw result.error;
+    if (!result.data) throw new Error('Card was not saved to the database');
+    try { localStorage.setItem(`card_cache_${result.data.id}`, JSON.stringify({ ...result.data.card_data, id: result.data.id })); } catch (_) {}
+    return { ...result.data.card_data, id: result.data.id };
   } catch (err) {
     console.error('Error saving card:', err);
     throw err;
