@@ -58,42 +58,14 @@ if (!client) {
 } else {
   const originalAuth = client.auth;
   const localSessionKey = 'taplink-demo-session';
-  const getLocalSession = () => {
-    const session = JSON.parse(localStorage.getItem(localSessionKey) || 'null');
-    if (session?.id === 'demo-user') {
-      session.id = '00000000-0000-4000-8000-000000000001';
-      localStorage.setItem(localSessionKey, JSON.stringify(session));
-    }
-    return session;
+  // Production authentication must always come from Supabase. A legacy demo
+  // session must never mask a real signed-in user on another browser/device.
+  localStorage.removeItem(localSessionKey);
+  const signOut = originalAuth.signOut.bind(originalAuth);
+  originalAuth.signOut = async (...args) => {
+    localStorage.removeItem(localSessionKey);
+    return signOut(...args);
   };
-  client.auth = new Proxy(originalAuth, {
-    get(auth, property) {
-      if (property === 'getUser') {
-        return async () => {
-          const localUser = getLocalSession();
-          return localUser
-            ? { data: { user: localUser }, error: null }
-            : auth.getUser();
-        };
-      }
-      if (property === 'getSession') {
-        return async () => {
-          const localUser = getLocalSession();
-          return localUser
-            ? { data: { session: { user: localUser } }, error: null }
-            : auth.getSession();
-        };
-      }
-      if (property === 'signOut') {
-        return async () => {
-          localStorage.removeItem(localSessionKey);
-          return auth.signOut();
-        };
-      }
-      const value = Reflect.get(auth, property, auth);
-      return typeof value === 'function' ? value.bind(auth) : value;
-    }
-  });
 }
 
 export const supabase = client;
