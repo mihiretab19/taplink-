@@ -167,6 +167,38 @@ document.getElementById('usersTableBody')?.addEventListener('click', async (even
   }
 });
 
+// ── Admin Password ─────────────────────────────────────────
+document.getElementById('adminPasswordForm')?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const password = document.getElementById('adminNewPassword').value;
+  const confirmation = document.getElementById('adminConfirmPassword').value;
+  const button = document.getElementById('adminPasswordBtn');
+
+  if (password.length < 6) {
+    showToast('Password must be at least 6 characters', 'error');
+    return;
+  }
+  if (password !== confirmation) {
+    showToast('Passwords do not match', 'error');
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Updating...';
+  try {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw error;
+    event.currentTarget.reset();
+    showToast('Admin password updated successfully', 'success');
+  } catch (err) {
+    console.error('Admin password update failed:', err);
+    showToast(err.message || 'Could not update password', 'error');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Update Password';
+  }
+});
+
 // ── Sign Out ───────────────────────────────────────────────
 document.getElementById('signOutBtn')?.addEventListener('click', () => signOut());
 

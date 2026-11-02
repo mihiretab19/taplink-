@@ -202,6 +202,24 @@
         </div>
       </div>
 
+      <!-- Admin password -->
+      <div class="users-table-container" style="margin-top:0">
+        <div class="users-table-header">
+          <h2 style="font-size:1.1rem;font-weight:700">Admin Password</h2>
+        </div>
+        <form id="adminPasswordForm" style="padding:var(--sp-lg);max-width:520px">
+          <div class="input-group">
+            <label class="input-label" for="adminNewPassword">New password</label>
+            <input class="input-field" type="password" id="adminNewPassword" minlength="6" autocomplete="new-password" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="adminConfirmPassword">Confirm new password</label>
+            <input class="input-field" type="password" id="adminConfirmPassword" minlength="6" autocomplete="new-password" required>
+          </div>
+          <button class="btn btn-primary" type="submit" id="adminPasswordBtn">Update Password</button>
+        </form>
+      </div>
+
       <!-- Users table -->
       <div class="users-table-container">
         <div class="users-table-header">
@@ -235,6 +253,6 @@
 </div>
 
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js" integrity="sha384-yifgV8iFWyp5cgu+V1G1rtlEHpEErPlL5fTrkUELIsWq0CIVDON2WP/NlXVJT3vO" crossorigin="anonymous"></script>
-<script type="module" src="js/admin.js"></script>
+<script type="module" src="js/admin.js?v=2"></script>
 </body>
 </html>
