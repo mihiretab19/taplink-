@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Processing...';
+    localStorage.removeItem('taplink-demo-session');
 
     try {
       if (isSignUp) {
@@ -108,15 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.replace('dashboard.html');
       }
     } catch (err) {
-      // Allow the static/local build to work when Supabase is unavailable or
-      // credentials have not been created in the hosted project yet.
-      localStorage.setItem('taplink-demo-session', JSON.stringify({
-        id: '00000000-0000-4000-8000-000000000001',
-        email,
-        user_metadata: { email }
-      }));
-      showToast('Signed in successfully!', 'success');
-      window.location.replace('dashboard.html');
+      // Never create a fake local session when Supabase authentication fails.
+      // Doing so only looks successful while the user and card are never saved
+      // in the database.
+      console.error('Authentication failed:', err);
+      const message = err?.message || 'Sign in failed';
+      showToast(message, 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
