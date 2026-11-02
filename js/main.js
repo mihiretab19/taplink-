@@ -61,17 +61,22 @@ export async function getCards() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
     if (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001') {
-      return getDemoCards(user.email);
+      const cards = getDemoCards(user.email);
+      try { localStorage.setItem(`taplink-dashboard-cache-${user.id}`, JSON.stringify(cards)); } catch (_) {}
+      return cards;
     }
     
+    const cacheKey = `taplink-dashboard-cache-${user.id}`;
     const { data, error } = await supabase
       .from('cards')
-      .select('*')
+      .select('id,user_id,card_data')
       .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .order('updated_at', { ascending: false });
       
     if (error) throw error;
-    return data.map(row => ({ ...row.card_data, id: row.id }));
+    const cards = data.map(row => ({ ...row.card_data, id: row.id }));
+    try { localStorage.setItem(cacheKey, JSON.stringify(cards)); } catch (_) {}
+    return cards;
   } catch (err) {
     console.error('Error fetching cards:', err);
     return [];

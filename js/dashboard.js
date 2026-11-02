@@ -9,6 +9,30 @@ let currentQrCard = null;
 let qrCodeInstance = null;
 let loadedCards = [];
 
+function getCachedDashboardCards() {
+  const demoSession = JSON.parse(localStorage.getItem('taplink-demo-session') || 'null');
+  if (demoSession?.id) return loadCachedCardList(demoSession.id);
+
+  for (let index = 0; index < localStorage.length; index++) {
+    const key = localStorage.key(index);
+    if (!key?.startsWith('sb-') || !key.endsWith('-auth-token')) continue;
+    try {
+      const auth = JSON.parse(localStorage.getItem(key));
+      const userId = auth?.user?.id || auth?.session?.user?.id;
+      if (userId) return loadCachedCardList(userId);
+    } catch (_) {}
+  }
+  return [];
+}
+
+function loadCachedCardList(userId) {
+  try {
+    return JSON.parse(localStorage.getItem(`taplink-dashboard-cache-${userId}`) || '[]');
+  } catch (_) {
+    return [];
+  }
+}
+
 // ── Sign Out ───────────────────────────────────────────────
 document.getElementById('signOutBtn')?.addEventListener('click', () => signOut());
 
@@ -88,12 +112,15 @@ async function renderCards(filter = '', cardsToRender = null) {
 }
 
 function cardItemHTML(card) {
+  const coverContent = card.cover
+    ? `<img src="${card.cover}" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block">`
+    : '';
   const coverStyle = card.cover
-    ? `background-image:url('${card.cover}');background-size:cover;background-position:center`
+    ? ''
     : `background:${card.design?.gradient || 'linear-gradient(135deg,#00ff88,#004d2c)'}`;
 
   const avatarContent = card.avatar
-    ? `<img src="${card.avatar}" alt="${card.name}">`
+    ? `<img src="${card.avatar}" alt="${card.name}" loading="lazy" decoding="async">`
     : `<span style="color:${card.design?.accent||'var(--clr-primary)'}">${(card.name||'?')[0]?.toUpperCase()||'U'}</span>`;
 
   const avatarBorder = card.design?.accent || 'var(--clr-primary)';
@@ -101,6 +128,7 @@ function cardItemHTML(card) {
   return `
     <div class="card-item" data-id="${card.id}">
       <div class="card-item-cover" style="${coverStyle}">
+        ${coverContent}
         <div class="card-item-avatar" style="border-color:${avatarBorder};background:var(--clr-bg-2)">
           ${avatarContent}
         </div>
@@ -317,6 +345,12 @@ window.addEventListener('resize', checkMobile);
 checkMobile();
 
 async function initDashboard() {
+  const cachedCards = getCachedDashboardCards();
+  if (cachedCards.length > 0) {
+    await renderCards('', cachedCards);
+    renderSidebarCards(cachedCards);
+  }
+
   const cardsPromise = getCards();
   await Promise.all([populateUser(), cardsPromise.then(cards => renderCards('', cards))]);
   renderSidebarCards(loadedCards);
