@@ -90,6 +90,21 @@ export async function getCard(id) {
     if (user && (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001')) {
       return getDemoCards(user.email).find(card => card.id === id) || null;
     }
+
+    // Public profile pages can run without an authenticated session.  Demo cards
+    // are stored in the browser, so allow the card owner to open its public URL.
+    try {
+      const cachedProfile = JSON.parse(localStorage.getItem(`card_cache_${id}`) || 'null');
+      if (cachedProfile?.id === id || cachedProfile) return cachedProfile;
+      for (let index = 0; index < localStorage.length; index++) {
+        const key = localStorage.key(index);
+        if (!key?.includes('taplink-cards') && !key?.startsWith('taplink-dashboard-cache-')) continue;
+        const cards = JSON.parse(localStorage.getItem(key) || '[]');
+        const cachedCard = Array.isArray(cards) && cards.find(card => card.id === id);
+        if (cachedCard) return cachedCard;
+      }
+    } catch (_) {}
+
     const { data, error } = await supabase
       .from('cards')
       .select('*')
