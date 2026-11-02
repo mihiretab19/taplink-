@@ -170,6 +170,7 @@ document.getElementById('usersTableBody')?.addEventListener('click', async (even
 // ── Admin Password ─────────────────────────────────────────
 document.getElementById('adminPasswordForm')?.addEventListener('submit', async (event) => {
   event.preventDefault();
+  const currentPassword = document.getElementById('adminCurrentPassword').value;
   const password = document.getElementById('adminNewPassword').value;
   const confirmation = document.getElementById('adminConfirmPassword').value;
   const button = document.getElementById('adminPasswordBtn');
@@ -188,12 +189,15 @@ document.getElementById('adminPasswordForm')?.addEventListener('submit', async (
   try {
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     if (sessionError) throw sessionError;
-    if (!sessionData?.session) {
+    if (!sessionData?.session?.user?.email) {
       throw new Error('Your admin session has expired. Sign in again, then retry.');
     }
 
-    const { error: refreshError } = await supabase.auth.refreshSession();
-    if (refreshError) throw refreshError;
+    const { error: reauthError } = await supabase.auth.signInWithPassword({
+      email: sessionData.session.user.email,
+      password: currentPassword
+    });
+    if (reauthError) throw new Error('The current password is incorrect');
 
     const { error } = await supabase.auth.updateUser({ password });
     if (error) throw error;

@@ -209,6 +209,10 @@
         </div>
         <form id="adminPasswordForm" style="padding:var(--sp-lg);max-width:520px">
           <div class="input-group">
+            <label class="input-label" for="adminCurrentPassword">Current password</label>
+            <input class="input-field" type="password" id="adminCurrentPassword" minlength="6" autocomplete="current-password" required>
+          </div>
+          <div class="input-group">
             <label class="input-label" for="adminNewPassword">New password</label>
             <input class="input-field" type="password" id="adminNewPassword" minlength="6" autocomplete="new-password" required>
           </div>
@@ -253,6 +257,6 @@
 </div>
 
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js" integrity="sha384-yifgV8iFWyp5cgu+V1G1rtlEHpEErPlL5fTrkUELIsWq0CIVDON2WP/NlXVJT3vO" crossorigin="anonymous"></script>
-<script type="module" src="js/admin.js?v=3"></script>
+<script type="module" src="js/admin.js?v=4"></script>
 </body>
 </html>
