@@ -66,25 +66,34 @@ if (!client) {
     }
     return session;
   };
-  client.auth = {
-    ...originalAuth,
-    async getUser() {
-      const localUser = getLocalSession();
-      return localUser
-        ? { data: { user: localUser }, error: null }
-        : originalAuth.getUser();
-    },
-    async getSession() {
-      const localUser = getLocalSession();
-      return localUser
-        ? { data: { session: { user: localUser } }, error: null }
-        : originalAuth.getSession();
-    },
-    async signOut() {
-      localStorage.removeItem(localSessionKey);
-      return originalAuth.signOut();
+  client.auth = new Proxy(originalAuth, {
+    get(auth, property) {
+      if (property === 'getUser') {
+        return async () => {
+          const localUser = getLocalSession();
+          return localUser
+            ? { data: { user: localUser }, error: null }
+            : auth.getUser();
+        };
+      }
+      if (property === 'getSession') {
+        return async () => {
+          const localUser = getLocalSession();
+          return localUser
+            ? { data: { session: { user: localUser } }, error: null }
+            : auth.getSession();
+        };
+      }
+      if (property === 'signOut') {
+        return async () => {
+          localStorage.removeItem(localSessionKey);
+          return auth.signOut();
+        };
+      }
+      const value = Reflect.get(auth, property, auth);
+      return typeof value === 'function' ? value.bind(auth) : value;
     }
-  };
+  });
 }
 
 export const supabase = client;
