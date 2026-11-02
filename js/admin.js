@@ -3,6 +3,25 @@ import { getUser, signOut, showToast, escapeHtml } from './main.js';
 
 let usersList = [];
 
+function getLocalDemoAdminData() {
+  const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+  const card = cards[0] || null;
+  const now = new Date().toISOString();
+
+  return {
+    total_users: 1,
+    total_cards: card ? 1 : 0,
+    users_list: [{
+      id: '00000000-0000-4000-8000-000000000001',
+      email: 'mihiretabbedilu@gmail.com',
+      created_at: now,
+      has_card: Boolean(card),
+      card_id: card?.id || null,
+      card_name: card?.name || null
+    }]
+  };
+}
+
 // ── Auth Guard & Init ──────────────────────────────────────
 async function initAdmin() {
   const user = await getUser();
@@ -30,9 +49,17 @@ async function loadAdminStats() {
   const tableBody = document.getElementById('usersTableBody');
   
   try {
-    const { data, error } = await supabase.rpc('get_admin_dashboard_data');
-    
-    if (error) throw error;
+    const localDemoSession = JSON.parse(localStorage.getItem('taplink-demo-session') || 'null');
+    const localAdmin = localDemoSession?.email === 'mihiretabbedilu@gmail.com';
+    let data;
+
+    if (localAdmin) {
+      data = getLocalDemoAdminData();
+    } else {
+      const { data: rpcData, error } = await supabase.rpc('get_admin_dashboard_data');
+      if (error) throw error;
+      data = rpcData;
+    }
 
     const totalUsers = data.total_users || 0;
     const totalCards = data.total_cards || 0;
@@ -120,8 +147,14 @@ document.getElementById('usersTableBody')?.addEventListener('click', async (even
   button.disabled = true;
   button.textContent = 'Deleting...';
   try {
-    const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
-    if (error) throw error;
+    const localDemoSession = JSON.parse(localStorage.getItem('taplink-demo-session') || 'null');
+    if (localDemoSession) {
+      if (userId === localDemoSession.id) throw new Error('The demo administrator cannot be deleted');
+      localStorage.removeItem('taplink-demo-session');
+    } else {
+      const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
+      if (error) throw error;
+    }
     showToast('User deleted successfully', 'success');
     await loadAdminStats();
   } catch (err) {

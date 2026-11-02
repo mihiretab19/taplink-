@@ -91,16 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.session) {
           showToast('Account created and signed in!', 'success');
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 1000);
+          window.location.replace('dashboard.html');
         } else {
           const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
           if (signInError) throw signInError;
           showToast('Account created and signed in!', 'success');
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 1000);
+          window.location.replace('dashboard.html');
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -109,9 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (error) throw error;
         showToast('Signed in successfully!', 'success');
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 1000);
+        window.location.replace('dashboard.html');
       }
     } catch (err) {
       // Allow the static/local build to work when Supabase is unavailable or
@@ -122,9 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         user_metadata: { email }
       }));
       showToast('Signed in successfully!', 'success');
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 500);
+      window.location.replace('dashboard.html');
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';

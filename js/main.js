@@ -60,6 +60,11 @@ window.getCards = getCards;
 
 export async function getCard(id) {
   try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user && (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001')) {
+      const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+      return cards.find(card => card.id === id) || null;
+    }
     const { data, error } = await supabase
       .from('cards')
       .select('*')
@@ -85,6 +90,15 @@ export async function saveCard(card) {
 
     if (!card.id) {
       card.id = generateId();
+    }
+
+    if (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001') {
+      const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+      const index = cards.findIndex(existing => existing.id === card.id);
+      if (index >= 0) cards[index] = card;
+      else cards.push(card);
+      localStorage.setItem('taplink-cards', JSON.stringify(cards));
+      return { ...card };
     }
 
     const payload = {
@@ -123,6 +137,12 @@ window.incrementStat = incrementStat;
 
 export async function deleteCard(id) {
   try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user && (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001')) {
+      const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+      localStorage.setItem('taplink-cards', JSON.stringify(cards.filter(card => card.id !== id)));
+      return;
+    }
     const { error } = await supabase
       .from('cards')
       .delete()

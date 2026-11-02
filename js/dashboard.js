@@ -7,17 +7,22 @@ import { getCards, getCard, deleteCard, getUser, openModal, closeModal, showToas
 let pendingDeleteId = null;
 let currentQrCard = null;
 let qrCodeInstance = null;
+let loadedCards = [];
 
 // ── Sign Out ───────────────────────────────────────────────
 document.getElementById('signOutBtn')?.addEventListener('click', () => signOut());
 
 
 // ── Render Cards ───────────────────────────────────────────
-async function renderCards(filter = '') {
+async function renderCards(filter = '', cardsToRender = null) {
   const grid = document.getElementById('cardsGrid');
   grid.innerHTML = '<p style="text-align:center;width:100%;color:var(--clr-text-2)">Loading cards...</p>';
-  
-  const allCards = await getCards();
+
+  if (cardsToRender) loadedCards = cardsToRender;
+  if (!cardsToRender && loadedCards.length === 0) {
+    loadedCards = await getCards();
+  }
+  const allCards = loadedCards;
   
   // Dynamically update UI links to respect the one-card limit
   const topbarBtn = document.getElementById('topbarCreateBtn');
@@ -186,10 +191,10 @@ function updateStats(cards) {
 }
 
 // ── Sidebar card list ──────────────────────────────────────
-async function renderSidebarCards() {
+async function renderSidebarCards(cardsToRender = null) {
   const list = document.getElementById('sidebarCardsList');
-  const allCards = await getCards();
-  const cards = allCards.slice(0, 5);
+  if (cardsToRender) loadedCards = cardsToRender;
+  const cards = loadedCards.slice(0, 5);
   list.innerHTML = cards.map(c => `
     <a href="builder.html?id=${c.id}" class="sidebar-link">
       <div class="avatar" style="width:28px;height:28px;font-size:11px;border-color:${c.design?.accent||'var(--clr-primary)'}">${(c.name||'?')[0]?.toUpperCase()||'U'}</div>
@@ -243,8 +248,9 @@ document.getElementById('confirmDeleteBtn')?.addEventListener('click', async () 
     await deleteCard(pendingDeleteId);
     pendingDeleteId = null;
     closeModal('deleteModal');
-    renderCards();
-    renderSidebarCards();
+    loadedCards = await getCards();
+    renderCards('', loadedCards);
+    renderSidebarCards(loadedCards);
     showToast('Card deleted', 'success');
   }
 });
@@ -311,9 +317,9 @@ window.addEventListener('resize', checkMobile);
 checkMobile();
 
 async function initDashboard() {
-  await populateUser();
-  await renderCards();
-  await renderSidebarCards();
+  const cardsPromise = getCards();
+  await Promise.all([populateUser(), cardsPromise.then(cards => renderCards('', cards))]);
+  renderSidebarCards(loadedCards);
 }
 
 initDashboard();
