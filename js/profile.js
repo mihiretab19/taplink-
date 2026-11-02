@@ -2,7 +2,7 @@
 // TAPLINK — PUBLIC PROFILE JS (Supabase Integrated)
 // Renders card, QR code, vCard download
 // ============================================================
-import { getCard, saveCard, downloadVCard, showToast, escapeHtml, sanitizeUrl, incrementStat } from './main.js';
+import { getCard, getCards, saveCard, downloadVCard, showToast, escapeHtml, sanitizeUrl, incrementStat } from './main.js';
 
 
 const TEMPLATES = [
@@ -31,7 +31,15 @@ async function loadAndRenderProfile() {
   const id = params.get('id');
   const root = document.getElementById('profileRoot');
 
-  if (!id) { renderNotFound(root); return; }
+  if (!id) {
+    const ownerCards = await getCards();
+    if (ownerCards.length > 0 && ownerCards[0].id) {
+      window.location.replace(`${location.pathname}?id=${encodeURIComponent(ownerCards[0].id)}`);
+      return;
+    }
+    renderNotFound(root);
+    return;
+  }
 
   // 1. Stale-While-Revalidate Caching for Instant Taps
   const cacheKey = `card_cache_${id}`;

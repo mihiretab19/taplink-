@@ -471,12 +471,19 @@ document.getElementById('previewPublicBtn')?.addEventListener('click', async () 
   cardState.updatedAt = new Date().toISOString();
   if (!cardState.createdAt) cardState.createdAt = cardState.updatedAt;
   
+  const previewWindow = window.open('', '_blank');
   try {
     const savedCard = await saveCard(cardState);
-    cardState.id = savedCard.id;
-    window.open(`profile.html?id=${savedCard.id}`, '_blank');
+    const savedId = savedCard?.id || cardState.id;
+    if (!savedId) throw new Error('The saved card has no ID');
+    cardState.id = savedId;
+    const previewUrl = `profile?id=${encodeURIComponent(savedId)}`;
+    if (previewWindow) previewWindow.location.replace(previewUrl);
+    else window.location.href = previewUrl;
   } catch(err) {
-    showToast('Please save the card before previewing', 'error');
+    if (previewWindow) previewWindow.close();
+    console.error('Preview failed:', err);
+    showToast('Could not save or preview the card', 'error');
   }
 });
 

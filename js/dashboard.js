@@ -180,7 +180,7 @@ function attachCardActions() {
   document.querySelectorAll('.preview-card-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      window.open(`profile.html?id=${btn.dataset.id}`, '_blank');
+      window.open(`profile?id=${encodeURIComponent(btn.dataset.id)}`, '_blank');
     });
   });
   document.querySelectorAll('.delete-card-btn').forEach(btn => {
@@ -199,7 +199,7 @@ function attachCardActions() {
   document.querySelectorAll('.share-card-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      const url = `${location.origin}${location.pathname.replace('dashboard.html','profile.html')}?id=${btn.dataset.id}`;
+      const url = `${location.origin}/profile?id=${encodeURIComponent(btn.dataset.id)}`;
       navigator.clipboard.writeText(url).then(() => showToast('Link copied to clipboard!', 'success'));
     });
   });
@@ -236,7 +236,7 @@ async function showQR(id, name) {
   if (!card) return;
 
   currentQrCard = card;
-  const url = `${location.origin}${location.pathname.replace('dashboard.html','profile.html')}?id=${id}`;
+  const url = `${location.origin}/profile?id=${encodeURIComponent(id)}`;
   document.getElementById('qrCardName').textContent = name || 'Card QR Code';
 
   const container = document.getElementById('qrCodeContainer');

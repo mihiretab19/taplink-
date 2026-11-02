@@ -112,7 +112,7 @@ function renderUsersTable(list) {
 
     const isAdmin = item.email === 'mihiretabbedilu@gmail.com';
     const viewButton = item.has_card
-      ? `<a href="profile.html?id=${item.card_id}" target="_blank" class="btn btn-outline btn-sm" style="padding:4px 8px; font-size:11px">View Card</a>`
+      ? `<a href="profile?id=${encodeURIComponent(item.card_id)}" target="_blank" class="btn btn-outline btn-sm" style="padding:4px 8px; font-size:11px">View Card</a>`
       : '';
     const deleteButton = isAdmin
       ? ''

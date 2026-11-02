@@ -14,4 +14,4 @@ export const APP_BASE_URL = window.location.origin;
 // Builds a canonical public profile URL for a given card ID.
 // Use this everywhere instead of building URLs manually.
 export const profileUrl = (cardId) =>
-  `${APP_BASE_URL}/profile.html?id=${encodeURIComponent(cardId)}`;
+  `${APP_BASE_URL}/profile?id=${encodeURIComponent(cardId)}`;

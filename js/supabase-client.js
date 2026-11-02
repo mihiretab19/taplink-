@@ -36,6 +36,8 @@ function createLocalDemoClient() {
       async getSession() { return { data: { session: readSession() ? {} : null }, error: null }; },
       async signInWithPassword({ email }) { return { data: { user: saveSession(email) }, error: null }; },
       async signUp({ email }) { return { data: { user: saveSession(email), session: {} }, error: null }; },
+      async resetPasswordForEmail() { return { data: {}, error: { message: 'Password reset requires the production Supabase configuration.' } }; },
+      async updateUser() { return { data: {}, error: { message: 'Password reset requires the production Supabase configuration.' } }; },
       async signOut() { localStorage.removeItem(SESSION_KEY); return { error: null }; }
     },
     from() { return { ...emptyQuery }; },

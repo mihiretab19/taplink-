@@ -177,8 +177,10 @@ export async function saveCard(card) {
 
     if (result.error) throw result.error;
     if (!result.data) throw new Error('Card was not saved to the database');
-    try { localStorage.setItem(`card_cache_${result.data.id}`, JSON.stringify({ ...result.data.card_data, id: result.data.id })); } catch (_) {}
-    return { ...result.data.card_data, id: result.data.id };
+    const savedId = result.data.id || card.id;
+    const savedCard = { ...result.data.card_data, ...card, id: savedId };
+    try { localStorage.setItem(`card_cache_${savedId}`, JSON.stringify(savedCard)); } catch (_) {}
+    return savedCard;
   } catch (err) {
     console.error('Error saving card:', err);
     throw err;
