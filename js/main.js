@@ -35,12 +35,33 @@ export function showToast(message, type = 'success', duration = 3000) {
 window.showToast = showToast;
 
 // ── Supabase Database Helpers ──────────────────────────────
+function getDemoCardsKey(email = '') {
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  return normalizedEmail ? `taplink-cards-${normalizedEmail}` : 'taplink-cards';
+}
+
+function getDemoCards(email = '') {
+  const emailCardsKey = getDemoCardsKey(email);
+  const emailCards = JSON.parse(localStorage.getItem(emailCardsKey) || '[]');
+  if (emailCards.length > 0) return emailCards;
+
+  // Keep cards created by older versions available in the first demo session.
+  const legacyCards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+  const session = JSON.parse(localStorage.getItem('taplink-demo-session') || 'null');
+  if (session?.email && String(session.email).trim().toLowerCase() === String(email).trim().toLowerCase() && legacyCards.length > 0) {
+    localStorage.setItem(emailCardsKey, JSON.stringify(legacyCards));
+    localStorage.removeItem('taplink-cards');
+    return legacyCards;
+  }
+  return [];
+}
+
 export async function getCards() {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
     if (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001') {
-      return JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+      return getDemoCards(user.email);
     }
     
     const { data, error } = await supabase
@@ -62,8 +83,7 @@ export async function getCard(id) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (user && (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001')) {
-      const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
-      return cards.find(card => card.id === id) || null;
+      return getDemoCards(user.email).find(card => card.id === id) || null;
     }
     const { data, error } = await supabase
       .from('cards')
@@ -88,18 +108,28 @@ export async function saveCard(card) {
       throw new Error('Not logged in');
     }
 
-    if (!card.id) {
-      card.id = generateId();
-    }
-
-    if (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001') {
-      const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+    const isDemoUser = user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001';
+    if (isDemoUser) {
+      const cards = getDemoCards(user.email);
+      if (cards.length > 0 && !cards.some(existing => existing.id === card.id)) {
+        card.id = cards[0].id;
+      }
+      if (!card.id) card.id = generateId();
       const index = cards.findIndex(existing => existing.id === card.id);
       if (index >= 0) cards[index] = card;
       else cards.push(card);
-      localStorage.setItem('taplink-cards', JSON.stringify(cards));
+      localStorage.setItem(getDemoCardsKey(user.email), JSON.stringify(cards));
       return { ...card };
     }
+
+    const { data: existingRows, error: existingError } = await supabase
+      .from('cards')
+      .select('id')
+      .eq('user_id', user.id)
+      .limit(1);
+    if (existingError) throw existingError;
+    if (existingRows?.length > 0) card.id = existingRows[0].id;
+    else if (!card.id) card.id = generateId();
 
     const payload = {
       id: card.id,
@@ -109,7 +139,7 @@ export async function saveCard(card) {
 
     const { data, error } = await supabase
       .from('cards')
-      .upsert(payload, { onConflict: 'id' })
+      .upsert(payload, { onConflict: 'user_id' })
       .select()
       .single();
 
@@ -139,8 +169,8 @@ export async function deleteCard(id) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (user && (user.id === 'demo-user' || user.id === '00000000-0000-4000-8000-000000000001')) {
-      const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
-      localStorage.setItem('taplink-cards', JSON.stringify(cards.filter(card => card.id !== id)));
+      const cards = getDemoCards(user.email);
+      localStorage.setItem(getDemoCardsKey(user.email), JSON.stringify(cards.filter(card => card.id !== id)));
       return;
     }
     const { error } = await supabase

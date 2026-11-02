@@ -4,7 +4,9 @@ import { getUser, signOut, showToast, escapeHtml } from './main.js';
 let usersList = [];
 
 function getLocalDemoAdminData() {
-  const cards = JSON.parse(localStorage.getItem('taplink-cards') || '[]');
+  const session = JSON.parse(localStorage.getItem('taplink-demo-session') || 'null');
+  const emailKey = session?.email ? `taplink-cards-${String(session.email).trim().toLowerCase()}` : 'taplink-cards';
+  const cards = JSON.parse(localStorage.getItem(emailKey) || localStorage.getItem('taplink-cards') || '[]');
   const card = cards[0] || null;
   const now = new Date().toISOString();
 
