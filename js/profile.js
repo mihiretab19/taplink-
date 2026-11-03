@@ -187,10 +187,13 @@ function renderProfile(root, card) {
         <!-- Location -->
         ${card.location ? `
           <div style="text-align:center;padding:0 var(--sp-lg) var(--sp-md)">
-            <div class="location-chip" style="display:inline-flex">
+            <a class="location-chip" id="locationChip" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(card.location)}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;text-decoration:none" title="Open location in Maps">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               ${escapeHtml(card.location)}
-            </div>
+            </a>
+            <button type="button" id="shareLocationBtn" class="share-location-btn" title="Share location" aria-label="Share location" style="margin-left:8px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </button>
           </div>` : ''}
 
         <!-- Social Links -->
@@ -264,6 +267,7 @@ function renderProfile(root, card) {
   document.getElementById('copyLinkHeaderBtn')?.addEventListener('click', copyLink);
   document.getElementById('copyLinkBtn')?.addEventListener('click', copyLink);
   document.getElementById('openQrBtn')?.addEventListener('click', () => openQR(card));
+  document.getElementById('shareLocationBtn')?.addEventListener('click', () => shareLocation(card.location));
 }
 
 // ── Social pills builder ───────────────────────────────────
@@ -359,6 +363,29 @@ function copyLink() {
       if (inp) { inp.select(); document.execCommand('copy'); }
       showToast('Link copied!', 'success');
     });
+}
+
+async function shareLocation(locationName) {
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationName)}`;
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `Location: ${locationName}`,
+        text: locationName,
+        url: mapsUrl
+      });
+      return;
+    } catch (error) {
+      if (error.name === 'AbortError') return;
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(`${locationName}\n${mapsUrl}`);
+    showToast('Location copied to clipboard!', 'success');
+  } catch (_) {
+    window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────

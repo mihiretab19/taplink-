@@ -409,6 +409,20 @@
   font-family: var(--ff-mono);
   color: var(--clr-text-2);
 }
+.share-location-btn {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--clr-border);
+  border-radius: 50%;
+  background: var(--clr-bg-2);
+  color: var(--clr-text-2);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  vertical-align: middle;
+}
 .copy-link-bar button {
   background: var(--clr-glass-2);
   border: 1px solid var(--clr-border);
