@@ -270,6 +270,12 @@ document.getElementById('downloadQrBtn')?.addEventListener('click', () => {
   }
 });
 
+document.getElementById('closeQrBtn')?.addEventListener('click', () => {
+  const modal = document.getElementById('qrModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+});
+
 // ── Delete ─────────────────────────────────────────────────
 document.getElementById('confirmDeleteBtn')?.addEventListener('click', async () => {
   if (pendingDeleteId) {

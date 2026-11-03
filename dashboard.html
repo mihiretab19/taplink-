@@ -196,14 +196,32 @@
     <p style="color:var(--clr-text-3);font-size:var(--fs-xs);margin-bottom:var(--sp-xl)">Scan to open profile. Share this code at events, on prints, or anywhere!</p>
     <div class="flex-center gap-sm">
       <button class="btn btn-primary flex-1" id="downloadQrBtn">Download QR</button>
-      <button class="btn btn-outline" onclick="closeModal('qrModal')">Close</button>
+      <button type="button" class="btn btn-outline" id="closeQrBtn">Close</button>
     </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/dist/umd/supabase.js" integrity="sha384-yifgV8iFWyp5cgu+V1G1rtlEHpEErPlL5fTrkUELIsWq0CIVDON2WP/NlXVJT3vO" crossorigin="anonymous"></script>
-<script type="module" src="js/main.js?v=4"></script>
-<script type="module" src="js/dashboard.js?v=4"></script>
+<script type="module" src="js/main.js?v=8"></script>
+<script type="module" src="js/dashboard.js?v=8"></script>
+<script>
+  function closeQrModal() {
+    var qrModal = document.getElementById('qrModal');
+    if (!qrModal) return;
+    qrModal.style.setProperty('display', 'none', 'important');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('closeQrBtn').addEventListener('click', function () {
+    closeQrModal();
+  });
+  document.getElementById('qrModal').addEventListener('click', function (event) {
+    if (event.target === event.currentTarget) closeQrModal();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeQrModal();
+  });
+</script>
 </body>
 </html>

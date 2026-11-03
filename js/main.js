@@ -311,6 +311,15 @@ export function closeModal(id) {
 }
 window.closeModal = closeModal;
 
+document.addEventListener('click', event => {
+  if (!(event.target instanceof Element)) return;
+  const closeButton = event.target.closest('[data-close-modal]');
+  if (!closeButton) return;
+  event.preventDefault();
+  event.stopPropagation();
+  closeModal(closeButton.dataset.closeModal);
+});
+
 // ── XSS Sanitization Utilities ───────────────────────────
 /**
  * Escapes HTML special characters in user-supplied strings.
